@@ -1,0 +1,49 @@
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Product
+from .forms import ProductForm
+
+def home(request):
+    products = Product.objects.all()
+    return render(request, 'shop/index.html', {'products': products})
+
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    return render(request, 'shop/product_detail.html', {'product': product})
+
+@login_required(login_url='login')
+def custom_dashboard(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('custom_dashboard')
+    else:
+        form = ProductForm()
+
+    products = Product.objects.all()
+    return render(request, 'shop/dashboard.html', {'form': form, 'products': products})
+
+@login_required(login_url='login')
+def edit_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('custom_dashboard')
+    else:
+        form = ProductForm(instance=product)
+
+    return render(request, 'shop/edit_product.html', {'form': form, 'product': product})
+
+@login_required(login_url='login')
+def delete_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    
+    # We only delete if it's a POST request for security
+    if request.method == 'POST':
+        product.delete()
+        
+    return redirect('custom_dashboard')
