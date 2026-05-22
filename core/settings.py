@@ -21,12 +21,12 @@ if IS_PRODUCTION:
     ALLOWED_HOSTS = [
         '.vercel.app',
         # Add your custom domain here if you have one, e.g.:
-        # 'kendi-code.com',
+        'linda-scentcity.vercel.app',
         # 'www.kendi-code.com',
     ]
     CSRF_TRUSTED_ORIGINS = [
         'https://*.vercel.app',
-        # 'https://kendi-code.com',
+        'https://linda-scentcity.vercel.app',
     ]
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     CSRF_COOKIE_SECURE = True
